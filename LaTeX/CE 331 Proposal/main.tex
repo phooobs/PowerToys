@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\setlength{\parskip}{0cm}
+\setlength{\parindent}{0pt}
+
+\title{Hardware Keystroke Encryption \\ CE 331 Proposal}
+\author{Zane Sauer \&  James Ferguson}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Background}
+Keyboard loggers are a type of spyware that either pieces of software or physical devices that intercept keystrokes and record them. These key loggers send the information collect to a third party [1]. These key loggers are sometimes used by parents to keep track of what their children are typing on a computer, but they are more often used by attackers attempting to steal personal information. 
+
+\subsection{Existing software Keystroke Encryption}
+A few forms of keystroke encryption all ready exist. There are a number of software tools that run only on the operating system and cannot defend against physical loggers. SpyShelter and Zemana are some examples of this. \\
+
+\subsection{Existing Wireless AES Encryption}
+There are also a number of wireless keyboards with AES encryption built in. However, As noted by Spandas the wireless component allows attackers to easily break in to the computer, rendering the device even easier to break into [2].
+
+\section{Problem Statement}
+We propose that keystroke encryption can be added at a hardware level to keyboards to prevent attackers from eavesdropping and stealing passwords with hardware key loggers.
+
+\section{Project Design}
+We plan to base our design on two open-source packages, QMK and PowerToys.
+
+\subsection{QMK}
+QMK is an open-source keyboard firmware that allows users to remap keys and run c code on their keyboard. QMK will be modified to encrypt the key stokes that its sends to the computer. We have a Preonic Rev2 keyboard that was designed to work with QMK firmware.
+
+\subsection{PowerToys}
+PowerToys is a an open-source collection of Windows power user utilities. Among these is a keyboard manager that intercepts keystrokes and remaps them to other keystrokes. We will be using this as a base for our keystroke decryption.
+
+\section{Expected outcomes}
+We aim to implement multiple different encryption algorithms, starting with a Cesar cipher and then upgrading to something more advanced such as AES or RSA. We hope that our wired keystroke encryption implementation offers better protection from hardware key loggers.
+
+\section{Milestones}
+As of Tuesday November third we were able to setup programming environments and implement a simple ROT13 shift cipher successfully. In the coming week we plan to do further research into back end programs that wired keyboards use and what encryption will be able to work within those programs. Thursday, November 12th we hope to begin implementing more advanced encryptions like RSA and AES if possible.
+
+\section{References}
+[1] D. Swinhoe, "What is a keylogger? How attackers can monitor everything you type", CSO Online, 2020. [Online]. Available: https://www.csoonline.com/\\article/3326304/what-is-a-keylogger-how-attackers-can-monitor-everything-you-type.html. [Accessed: 03-Nov-2020]. \\
+
+[2] L. Spandas, "Your Wireless Keyboard Isn't Safe (Even With AES Encryption)", Lifehacker Australia, 2020. [Online]. Available: https://www.lifehacker\\.com.au/2016/10/your-wireless-keyboard-isnt-safe-even-with-aes-encryption\\/. [Accessed: 03- Nov- 2020].
+
+\end{document}
