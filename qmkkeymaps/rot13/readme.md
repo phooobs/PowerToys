@@ -1,1 +1,1 @@
-# The default Preonic layout - largely based on the Planck's
+# A simple Keymap for the Preonic with the raise key toggles ROT13 Encryption.
