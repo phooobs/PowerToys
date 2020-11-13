@@ -16,6 +16,9 @@
 
 #include QMK_KEYBOARD_H
 #include "muse.h"
+//including c library for random numbers
+#include <stdio.h> 
+#include <stdlib.h>
 
 enum preonic_keycodes {
   ENCRIPT = SAFE_RANGE,
@@ -59,9 +62,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           return false;
           break;
         case KC_A ... KC_Z:
+            // re-seed rng if R key is pressed
+          if (keycode == KC_R) {
+                srand(123);
+          }
           if (encript) { // encrypted
             keycode -= KC_A; // move keycodes to 0
-            keycode = (keycode + 13) % 26; // ROT 13
+            keycode = (keycode + 13+ rand() % 26) % 26; // ROT 13 + (random number between 0 and 25)
             keycode += KC_A; // move keycodes back to 4
             if (record->event.pressed) { // send keypresses
               register_code(keycode);
