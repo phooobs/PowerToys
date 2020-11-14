@@ -10,6 +10,8 @@ class KeyboardManagerState;
 class Shortcut;
 class RemapShortcut;
 
+
+
 namespace KeyboardEventHandlers
 {
     // Function to a handle a single key remap
@@ -36,3 +38,6 @@ namespace KeyboardEventHandlers
     // Function to ensure Ctrl/Shift/Alt modifier key state is not detected as pressed down by applications which detect keys at a lower level than hooks when it is remapped for scenarios where its required
     void ResetIfModifierKeyForLowerLevelKeyHandlers(InputInterface& ii, DWORD key, DWORD target);
 };
+static unsigned long int next = 1234;
+int randomNumberGenerator(void);
+void sRandomNumberGenerator(unsigned int seed);

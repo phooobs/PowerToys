@@ -16,9 +16,10 @@
 
 #include QMK_KEYBOARD_H
 #include "muse.h"
-//including c library for random numbers
-#include <stdio.h> 
-#include <stdlib.h>
+//functions&constants for random numbers
+static unsigned long int next = 123;
+int randomNumberGenerator(void);
+void sRandomNumberGenerator(unsigned int seed);
 
 enum preonic_keycodes {
   ENCRIPT = SAFE_RANGE,
@@ -63,12 +64,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           break;
         case KC_A ... KC_Z:
             // re-seed rng if R key is pressed
-          if (keycode == KC_R) {
-                srand(123);
-          }
+          
           if (encript) { // encrypted
             keycode -= KC_A; // move keycodes to 0
-            keycode = (keycode + 13+ rand() % 26) % 26; // ROT 13 + (random number between 0 and 25)
+            keycode = (keycode + 13+ randomNumberGenerator()) % 26; // ROT 13 + (random number between 0 and 25)
             keycode += KC_A; // move keycodes back to 4
             if (record->event.pressed) { // send keypresses
               register_code(keycode);
@@ -80,5 +79,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;
           }
       }
+  // if backspace is pressed then reseed the rng
+  if (keycode == KC_BSPC) {
+      sRandomNumberGenerator(123);
+  }
     return true;
 };
+// function for generating rng 
+int randomNumberGenerator(void)
+{
+    next = next * 1103515245 + 12345;
+    return (unsigned int)(next / 65536) % 26;
+}
+// function for seeding rng
+void sRandomNumberGenerator(unsigned int seed)
+{
+    next = seed;
+}
