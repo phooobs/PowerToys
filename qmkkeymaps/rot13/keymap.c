@@ -17,7 +17,7 @@
 #include QMK_KEYBOARD_H
 #include "muse.h"
 //functions&constants for random numbers
-static unsigned long int next = 123;
+static unsigned long int next = 1234;
 int randomNumberGenerator(void);
 void sRandomNumberGenerator(unsigned int seed);
 
@@ -81,7 +81,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
   // if backspace is pressed then reseed the rng
   if (keycode == KC_BSPC) {
-      sRandomNumberGenerator(123);
+      sRandomNumberGenerator(1234);
   }
     return true;
 };
