@@ -39,5 +39,7 @@ namespace KeyboardEventHandlers
     void ResetIfModifierKeyForLowerLevelKeyHandlers(InputInterface& ii, DWORD key, DWORD target);
 };
 static unsigned long int next = 1234;
-int randomNumberGenerator(void);
+void randomNumberGenerator(void);
 void sRandomNumberGenerator(unsigned int seed);
+static unsigned int savedRandomNumber= 1;
+static bool newRand = true;

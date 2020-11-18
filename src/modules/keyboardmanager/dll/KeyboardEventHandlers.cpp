@@ -7,6 +7,7 @@
 #include <keyboardmanager/common/InputInterface.h>
 #include <keyboardmanager/common/Helpers.h>
 #include <keyboardmanager/common/trace.h>
+#include <iostream>
 
 //including c library for random numbers
 #include <stdio.h> 
@@ -21,9 +22,9 @@ namespace KeyboardEventHandlers
         if (!(data->lParam->dwExtraInfo & CommonSharedConstants::KEYBOARDMANAGER_INJECTED_FLAG))
         {
             //re-seed rng if backspace key is pressed
-            if (data->lParam->vkCode == 0x08)
+            if (data->lParam->vkCode == 0x08 && newRand)
             {
-                sRandomNumberGenerator(1234);
+                randomNumberGenerator();
             }
             // windows keycodes : https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
             if (data->lParam->vkCode >= 0x41 && data->lParam->vkCode <= 0x5A)// 0x41 A through 0x5A Z
@@ -38,17 +39,20 @@ namespace KeyboardEventHandlers
                 // decrypt
                 target = data->lParam->vkCode;
                 target -= 0x41; // move alpha keycodes to start at 0
-                target = (target + 13 + randomNumberGenerator()) % 26; // ROT13+RNG
+                target = (target + 13 + savedRandomNumber) % 26; // ROT13+RNG
                 target += 0x41; // alpha keycodes back to A
                 
                 // set new keycode
                 if (data->wParam == WM_KEYUP || data->wParam == WM_SYSKEYUP)
                 {
                     KeyboardManagerHelper::SetKeyEvent(keyEventList, 0, INPUT_KEYBOARD, (WORD)target, KEYEVENTF_KEYUP, KeyboardManagerConstants::KEYBOARDMANAGER_SINGLEKEY_FLAG);
+                    newRand = true;
+                 
                 }
                 else
                 {
                     KeyboardManagerHelper::SetKeyEvent(keyEventList, 0, INPUT_KEYBOARD, (WORD)target, 0, KeyboardManagerConstants::KEYBOARDMANAGER_SINGLEKEY_FLAG);
+                    newRand=false;
                 }
 
                 // send new keycode
@@ -797,10 +801,10 @@ namespace KeyboardEventHandlers
     }
 }
 
-int randomNumberGenerator(void)
+void randomNumberGenerator(void)
 {
     next = next * 1103515245 + 12345;
-    return (unsigned int)(next/65536)%26;
+    savedRandomNumber = (unsigned int)((next/65536)%25)+1;
 }
 
 void sRandomNumberGenerator(unsigned int seed)

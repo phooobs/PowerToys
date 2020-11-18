@@ -18,8 +18,10 @@
 #include "muse.h"
 //functions&constants for random numbers
 static unsigned long int next = 1234;
-int randomNumberGenerator(void);
+void randomNumberGenerator(void);
 void sRandomNumberGenerator(unsigned int seed);
+static unsigned int savedRandomNumber = 1;
+static bool newRand = true;
 
 enum preonic_keycodes {
   ENCRIPT = SAFE_RANGE,
@@ -67,7 +69,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           
           if (encript) { // encrypted
             keycode -= KC_A; // move keycodes to 0
-            keycode = (keycode + 13+ randomNumberGenerator()) % 26; // ROT 13 + (random number between 0 and 25)
+            keycode = (keycode + 13+ savedRandomNumber()) % 26; // ROT 13 + saved andom number
             keycode += KC_A; // move keycodes back to 4
             if (record->event.pressed) { // send keypresses
               register_code(keycode);
@@ -79,20 +81,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;
           }
       }
-  // if backspace is pressed then reseed the rng
-  if (keycode == KC_BSPC) {
-      sRandomNumberGenerator(1234);
+  // if backspace is pressed and no keys are down then reseed the rng
+  if (keycode == KC_BSPC&&newRand) {
+      randomNumberGenerator();
   }
     return true;
 };
-// function for generating rng 
-int randomNumberGenerator(void)
+// function for generating rng  that stores a value between 1 and 25
+void randomNumberGenerator(void)
 {
     next = next * 1103515245 + 12345;
-    return (unsigned int)(next / 65536) % 26;
+    savedRandomNumber=(unsigned int)((next / 65536) % 25)+1;
 }
 // function for seeding rng
 void sRandomNumberGenerator(unsigned int seed)
 {
     next = seed;
 }
+
+/*
+need to add function
+
+if (key any pressed down)
+    newRand=false;
+if (a key is released)
+    newRand=true
+    
+*/
